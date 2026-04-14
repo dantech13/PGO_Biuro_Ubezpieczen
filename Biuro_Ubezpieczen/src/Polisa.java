@@ -37,4 +37,46 @@ public class Polisa {
     public String getKlient() {
         return klient;
     }
+
+    public double obliczSkladkeKoncowa() {
+        double skladka = skladkaBazowa + OPLATA_ADMINISTRACYJNA;
+
+        skladka += poziomRyzyka * 120;
+
+        if (wartoscPojazdu > 60000) {
+            skladka += 200;
+        }
+        if (czyMaAlarm) {
+            skladka -= 100;
+        }
+        if (czyBezszkodowyKlient) {
+            skladka *= 0.9;
+        }
+        if (skladka<skladkaBazowa) {
+            skladka = skladkaBazowa;
+        }
+        return Math.round(skladka * 100.0) / 100.0;
+    }
+
+    public String pobierzPodsumowanieRyzyka() {
+        return "Polisa " + numerPolisy + " | klient: " + klient +
+                " | poziom ryzyka: " + poziomRyzyka;
+    }
+
+    @Override
+    public String toString() {
+        return "Polisa{" +
+                "numer='" + numerPolisy + '\'' +
+                ", klient='" + klient + '\'' +
+                ", skladkaKoncowa=" + obliczSkladkeKoncowa() +
+                '}';
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Polisa other = (Polisa) obj;
+        return this.numerPolisy.equals(other.numerPolisy);
+    }
 }
