@@ -26,6 +26,45 @@ public class Polisa {
         this.czyBezszkodowyKlient = czyBezszkodowyKlient;
     }
 
+    public double obliczSkladkeOdnowieniowa() {
+        double aktualna = obliczSkladkeKoncowa();
+        double nowa = aktualna;
+
+        // zwiększenie za ryzyko
+        if (poziomRyzyka == 4) {
+            nowa *= 1.10;
+        } else if (poziomRyzyka >= 5) {
+            nowa *= 1.20;
+        }
+
+        // dopłata za drogi pojazd
+        if (wartoscPojazdu > 60000) {
+            nowa += 150;
+        }
+
+        // zniżki
+        if (czyBezszkodowyKlient) {
+            nowa *= 0.92;
+        }
+
+        if (czyMaAlarm) {
+            nowa *= 0.95;
+        }
+
+        // ograniczenia (widełki)
+        double min = aktualna * 0.9;
+        double max = aktualna * 1.25;
+
+        if (nowa < min) {
+            nowa = min;
+        }
+        if (nowa > max) {
+            nowa = max;
+        }
+
+        return Math.round(nowa * 100.0) / 100.0;
+    }
+
     public static int pobierzLiczbeUtworzonychPolis() {
         return liczbaUtworzonychPolis;
     }
